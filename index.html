@@ -1,167 +1,199 @@
 <!DOCTYPE html>
 <html lang="km">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KPI Work - កត់ត្រាការងារ</title>
-  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Hanuman:wght@400;700&display=swap');
-    * { box-sizing: border-box; }
-    body { font-family: 'Hanuman', 'Khmer OS', 'Khmer', sans-serif; }
-    .tab-active { border-bottom: 3px solid var(--primary); color: var(--primary); font-weight: 700; }
-    .task-card { transition: box-shadow 0.2s, transform 0.15s; }
-    .task-card:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
-    .badge-done { background: var(--success); color: #fff; }
-    .badge-pending { background: var(--warning); color: #fff; }
-    .progress-bar { transition: width 0.6s cubic-bezier(.4,0,.2,1); }
-    input, textarea, select {
-      background: var(--card);
-      color: var(--foreground);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    input:focus, textarea:focus, select:focus { border-color: var(--primary); }
-    .btn-primary {
-      background: var(--primary);
-      color: var(--primary-foreground);
-      border-radius: 8px;
-      padding: 8px 20px;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.2s;
-    }
-    .btn-primary:hover { opacity: 0.85; }
-    .btn-danger {
-      background: var(--error);
-      color: #fff;
-      border-radius: 8px;
-      padding: 5px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.2s;
-    }
-    .btn-danger:hover { opacity: 0.8; }
-    .btn-success {
-      background: var(--success);
-      color: #fff;
-      border-radius: 8px;
-      padding: 5px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.2s;
-    }
-    .btn-success:hover { opacity: 0.8; }
-    .btn-secondary {
-      background: var(--secondary);
-      color: var(--secondary-foreground);
-      border-radius: 8px;
-      padding: 5px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      border: 1px solid var(--card-border);
-      transition: opacity 0.2s;
-    }
-    .btn-secondary:hover { opacity: 0.8; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    .modal-bg {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-      display: flex; align-items: center; justify-content: center; z-index: 50;
-    }
-    .modal-box {
-      background: var(--card); border-radius: 14px; padding: 28px;
-      width: 90%; max-width: 500px; box-shadow: 0 8px 40px rgba(0,0,0,0.2);
-      border: 1px solid var(--card-border);
-    }
-    .priority-HIGH { border-left: 4px solid var(--error); }
-    .priority-MEDIUM { border-left: 4px solid var(--warning); }
-    .priority-LOW { border-left: 4px solid var(--success); }
-    .empty-state { text-align: center; padding: 48px 0; color: var(--muted-foreground); }
-    .chip {
-      display: inline-block; padding: 2px 10px; border-radius: 999px;
-      font-size: 11px; font-weight: 700;
-    }
-    .search-box { position: relative; }
-    .search-box span { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted-foreground); }
-    .search-box input { padding-left: 32px; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>KPI Work - កត់ត្រាការងារ</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --primary:#6366f1;
+  --primary-fg:#fff;
+  --bg:#f4f6fb;
+  --card:#fff;
+  --border:#e2e8f0;
+  --text:#1e293b;
+  --muted:#64748b;
+  --success:#22c55e;
+  --warning:#f59e0b;
+  --error:#ef4444;
+  --accent:#818cf8;
+}
+body{font-family:'Segoe UI','Khmer OS','Hanuman',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
+/* Header */
+.header{background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:30;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.header-inner{max-width:960px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{background:var(--primary);border-radius:10px;padding:7px;display:flex;}
+.logo-title{font-weight:700;font-size:16px;color:var(--text);}
+.logo-sub{font-size:11px;color:var(--muted);}
+.header-right{display:flex;align-items:center;gap:12px;}
+.today{font-size:12px;color:var(--muted);}
+/* Tabs */
+.tabs{max-width:960px;margin:0 auto;padding:0 20px;display:flex;gap:4px;}
+.tab-btn{background:none;border:none;cursor:pointer;padding:10px 16px;font-size:13px;font-family:inherit;color:var(--muted);border-bottom:3px solid transparent;transition:all .2s;font-weight:500;}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:700;}
+.tab-btn:hover{color:var(--primary);}
+/* Main */
+.main{max-width:960px;margin:0 auto;padding:20px;}
+/* Summary cards */
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.stat-label{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.stat-value{font-size:28px;font-weight:700;}
+/* Progress */
+.progress-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;}
+.progress-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;color:var(--muted);}
+.progress-pct{color:var(--primary);font-weight:700;}
+.progress-track{background:#e2e8f0;border-radius:999px;height:10px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--primary);border-radius:999px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+/* Search/Filter */
+.filter-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.search-wrap{flex:1;min-width:200px;position:relative;}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);}
+.search-wrap input{padding-left:34px;}
+input,textarea,select{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-family:inherit;font-size:13px;outline:none;transition:border-color .2s;width:100%;}
+input:focus,textarea:focus,select:focus{border-color:var(--primary);}
+select{max-width:160px;cursor:pointer;}
+/* Buttons */
+.btn{font-family:inherit;cursor:pointer;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;transition:opacity .2s;}
+.btn:hover{opacity:.85;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-sm{padding:5px 11px;font-size:12px;}
+.btn-success-sm{background:var(--success);color:#fff;}
+.btn-warn-sm{background:var(--warning);color:#fff;}
+.btn-outline{background:#f1f5f9;color:var(--text);border:1px solid var(--border);}
+.btn-danger-sm{background:var(--error);color:#fff;}
+/* Task card */
+.task-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;transition:box-shadow .2s,transform .15s;border-left:4px solid var(--border);}
+.task-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.09);transform:translateY(-1px);}
+.task-card.priority-HIGH{border-left-color:var(--error);}
+.task-card.priority-MEDIUM{border-left-color:var(--warning);}
+.task-card.priority-LOW{border-left-color:var(--success);}
+.task-card.overdue{border-color:var(--error);}
+.task-row{display:flex;align-items:flex-start;gap:12px;}
+.check-circle{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);cursor:pointer;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.check-circle.done{background:var(--success);border-color:var(--success);}
+.task-body{flex:1;min-width:0;}
+.task-title-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:4px;}
+.task-title{font-weight:700;font-size:14px;}
+.task-title.done-text{text-decoration:line-through;color:var(--muted);}
+.task-desc{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.task-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--muted);}
+.task-actions{display:flex;gap:6px;flex-shrink:0;}
+/* Chips/badges */
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;}
+.chip-done{background:var(--success);color:#fff;}
+.chip-pending{background:var(--warning);color:#fff;}
+.chip-high{background:var(--error);color:#fff;}
+.chip-medium{background:var(--warning);color:#fff;}
+.chip-low{background:var(--success);color:#fff;}
+.chip-cat{background:#e0e7ff;color:#4338ca;}
+.chip-overdue{background:var(--error);color:#fff;}
+/* Empty state */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-icon{font-size:52px;margin-bottom:12px;}
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:50;}
+.modal-bg.hidden{display:none;}
+.modal-box{background:var(--card);border-radius:16px;padding:28px;width:90%;max-width:500px;box-shadow:0 8px 40px rgba(0,0,0,.18);}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.modal-title{font-weight:700;font-size:16px;}
+.modal-close{background:none;border:none;cursor:pointer;font-size:22px;color:var(--muted);line-height:1;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-group{margin-bottom:12px;}
+.form-label{font-size:11px;color:var(--muted);display:block;margin-bottom:5px;}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+/* Stats panel */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.stat-big{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.stat-big-label{font-size:11px;color:var(--muted);margin-bottom:6px;}
+.stat-big-num{font-size:36px;font-weight:700;}
+.bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;}
+.bar-track{background:#e2e8f0;border-radius:999px;height:10px;overflow:hidden;margin-bottom:12px;}
+.bar-fill{height:100%;border-radius:999px;transition:width .5s;}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
+.section-title{font-weight:700;font-size:14px;margin-bottom:14px;}
+.priority-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;}
+.priority-box{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:12px;}
+.priority-box-num{font-size:26px;font-weight:700;}
+.priority-box-label{font-size:11px;color:var(--muted);margin-top:4px;}
+.hidden{display:none!important;}
+@media(max-width:600px){
+  .summary-grid{grid-template-columns:1fr 1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr;}
+  .task-actions{flex-direction:column;}
+  .filter-row select{max-width:100%;}
+}
+</style>
 </head>
-<body class="bg-[var(--background)] text-[var(--foreground)]" style="min-height:100vh;">
+<body>
 
 <!-- Header -->
-<div style="background: var(--card); border-bottom: 1px solid var(--card-border);" class="sticky top-0 z-30">
-  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div style="background:var(--primary);" class="rounded-xl p-2">
-        <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div>
-        <div class="font-bold text-base" style="color:var(--foreground);">KPI Work</div>
-        <div class="text-xs" style="color:var(--muted-foreground);">ប្រព័ន្ធកត់ត្រាការងារ</div>
+        <div class="logo-title">KPI Work</div>
+        <div class="logo-sub">ប្រព័ន្ធកត់ត្រាការងារ</div>
       </div>
     </div>
-    <div class="flex items-center gap-2">
-      <span id="today-date" class="text-xs" style="color:var(--muted-foreground);"></span>
-      <button class="btn-primary text-sm" onclick="openModal()">+ បន្ថែមការងារ</button>
+    <div class="header-right">
+      <span class="today" id="today-date"></span>
+      <button class="btn btn-primary" onclick="openModal()">+ បន្ថែមការងារ</button>
     </div>
   </div>
-  <!-- Tabs -->
-  <div class="max-w-5xl mx-auto px-4 flex gap-6 text-sm">
-    <button onclick="setTab('all')" id="tab-all" class="pb-2 pt-1 font-medium transition tab-active" style="background:none;border:none;cursor:pointer;color:var(--foreground);">ទាំងអស់</button>
-    <button onclick="setTab('done')" id="tab-done" class="pb-2 pt-1 font-medium transition" style="background:none;border:none;cursor:pointer;color:var(--muted-foreground);">✅ បានធ្វើ</button>
-    <button onclick="setTab('pending')" id="tab-pending" class="pb-2 pt-1 font-medium transition" style="background:none;border:none;cursor:pointer;color:var(--muted-foreground);">⏳ មិនទាន់ធ្វើ</button>
-    <button onclick="setTab('stats')" id="tab-stats" class="pb-2 pt-1 font-medium transition" style="background:none;border:none;cursor:pointer;color:var(--muted-foreground);">📊 KPI</button>
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-all" onclick="setTab('all')">ទាំងអស់</button>
+    <button class="tab-btn" id="tab-done" onclick="setTab('done')">✅ បានធ្វើ</button>
+    <button class="tab-btn" id="tab-pending" onclick="setTab('pending')">⏳ មិនទាន់ធ្វើ</button>
+    <button class="tab-btn" id="tab-stats" onclick="setTab('stats')">📊 KPI</button>
   </div>
 </div>
 
 <!-- Main -->
-<div class="max-w-5xl mx-auto px-4 py-5" id="main-content">
-
-  <!-- Summary Cards -->
-  <div class="grid grid-cols-3 gap-3 mb-5" id="summary-cards">
-    <div class="rounded-xl p-4" style="background:var(--card);border:1px solid var(--card-border);">
-      <div class="text-xs mb-1" style="color:var(--muted-foreground);">ការងារសរុប</div>
-      <div class="text-2xl font-bold" id="stat-total">0</div>
+<div class="main">
+  <!-- Summary -->
+  <div class="summary-grid" id="summary-cards">
+    <div class="stat-card">
+      <div class="stat-label">ការងារសរុប</div>
+      <div class="stat-value" id="stat-total" style="color:var(--text);">0</div>
     </div>
-    <div class="rounded-xl p-4" style="background:var(--card);border:1px solid var(--card-border);">
-      <div class="text-xs mb-1" style="color:var(--success);">✅ បានធ្វើ</div>
-      <div class="text-2xl font-bold" style="color:var(--success);" id="stat-done">0</div>
+    <div class="stat-card">
+      <div class="stat-label" style="color:var(--success);">✅ បានធ្វើ</div>
+      <div class="stat-value" id="stat-done" style="color:var(--success);">0</div>
     </div>
-    <div class="rounded-xl p-4" style="background:var(--card);border:1px solid var(--card-border);">
-      <div class="text-xs mb-1" style="color:var(--warning);">⏳ មិនទាន់</div>
-      <div class="text-2xl font-bold" style="color:var(--warning);" id="stat-pending">0</div>
-    </div>
-  </div>
-
-  <!-- Progress Bar -->
-  <div class="mb-5 rounded-xl p-4" style="background:var(--card);border:1px solid var(--card-border);" id="progress-section">
-    <div class="flex justify-between text-xs mb-2">
-      <span style="color:var(--muted-foreground);">ដំណើរការការងារ (KPI Progress)</span>
-      <span id="progress-pct" class="font-bold" style="color:var(--primary);">0%</span>
-    </div>
-    <div class="rounded-full overflow-hidden" style="height:10px;background:var(--border);">
-      <div class="progress-bar rounded-full" id="progress-bar" style="height:100%;width:0%;background:var(--primary);"></div>
+    <div class="stat-card">
+      <div class="stat-label" style="color:var(--warning);">⏳ មិនទាន់</div>
+      <div class="stat-value" id="stat-pending" style="color:var(--warning);">0</div>
     </div>
   </div>
 
-  <!-- Search + Filter -->
-  <div class="flex gap-3 mb-4" id="search-filter">
-    <div class="search-box flex-1">
-      <span>🔍</span>
-      <input type="text" id="search-input" placeholder="ស្វែងរកការងារ..." oninput="renderTasks()" />
+  <!-- Progress -->
+  <div class="progress-card" id="progress-section">
+    <div class="progress-header">
+      <span>ដំណើរការការងារ (KPI Progress)</span>
+      <span class="progress-pct" id="progress-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-bar" style="width:0%;"></div>
+    </div>
+  </div>
+
+  <!-- Search & Filter -->
+  <div class="filter-row" id="search-filter">
+    <div class="search-wrap">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style="color:#94a3b8;"><circle cx="11" cy="11" r="8" stroke="#94a3b8" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/></svg>
+      <input type="text" id="search-input" placeholder="ស្វែងរកការងារ..." oninput="renderTasks()"/>
     </div>
     <select id="filter-category" onchange="renderTasks()" style="max-width:160px;">
       <option value="">ប្រភេទទាំងអស់</option>
     </select>
-    <select id="filter-priority" onchange="renderTasks()" style="max-width:140px;">
+    <select id="filter-priority" onchange="renderTasks()" style="max-width:150px;">
       <option value="">អាទិភាពទាំងអស់</option>
       <option value="HIGH">🔴 ខ្ពស់</option>
       <option value="MEDIUM">🟡 មធ្យម</option>
@@ -169,376 +201,301 @@
     </select>
   </div>
 
-  <!-- Task List -->
+  <!-- Task list -->
   <div id="task-list"></div>
 
-  <!-- Stats Tab (hidden by default) -->
+  <!-- Stats panel -->
   <div id="stats-panel" class="hidden"></div>
 </div>
 
-<!-- Add/Edit Modal -->
-<div id="modal" class="modal-bg hidden" onclick="closeModalBg(event)">
+<!-- Modal -->
+<div class="modal-bg hidden" id="modal" onclick="closeModalBg(event)">
   <div class="modal-box">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="font-bold text-base" id="modal-title">បន្ថែមការងារថ្មី</h2>
-      <button onclick="closeModal()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--muted-foreground);">✕</button>
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">បន្ថែមការងារថ្មី</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="space-y-3">
-      <div>
-        <label class="text-xs mb-1 block" style="color:var(--muted-foreground);">ឈ្មោះការងារ *</label>
-        <input type="text" id="f-title" placeholder="ឈ្មោះការងារ..." />
+    <div class="form-group">
+      <label class="form-label">ឈ្មោះការងារ *</label>
+      <input type="text" id="f-title" placeholder="ឈ្មោះការងារ..."/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">ការពិពណ៌នា</label>
+      <textarea id="f-desc" placeholder="ការពិពណ៌នាលម្អិត..." rows="3" style="resize:vertical;"></textarea>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">ប្រភេទ</label>
+        <input type="text" id="f-category" placeholder="ឧ. ការិយាល័យ, គំរោង..."/>
       </div>
-      <div>
-        <label class="text-xs mb-1 block" style="color:var(--muted-foreground);">ការពិពណ៌នា</label>
-        <textarea id="f-desc" placeholder="ការពិពណ៌នា..." rows="3"></textarea>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted-foreground);">ប្រភេទ</label>
-          <input type="text" id="f-category" placeholder="ឧ. ការិយាល័យ, គំរោង..." />
-        </div>
-        <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted-foreground);">អាទិភាព</label>
-          <select id="f-priority">
-            <option value="MEDIUM">🟡 មធ្យម</option>
-            <option value="HIGH">🔴 ខ្ពស់</option>
-            <option value="LOW">🟢 ទាប</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted-foreground);">កាលបរិច្ឆេទចាប់ផ្តើម</label>
-          <input type="date" id="f-start" />
-        </div>
-        <div>
-          <label class="text-xs mb-1 block" style="color:var(--muted-foreground);">ថ្ងៃកំណត់</label>
-          <input type="date" id="f-due" />
-        </div>
-      </div>
-      <div>
-        <label class="text-xs mb-1 block" style="color:var(--muted-foreground);">ស្ថានភាព</label>
-        <select id="f-status">
-          <option value="pending">⏳ មិនទាន់ធ្វើ</option>
-          <option value="done">✅ បានធ្វើ</option>
+      <div class="form-group">
+        <label class="form-label">អាទិភាព</label>
+        <select id="f-priority" style="max-width:100%;">
+          <option value="MEDIUM">🟡 មធ្យម</option>
+          <option value="HIGH">🔴 ខ្ពស់</option>
+          <option value="LOW">🟢 ទាប</option>
         </select>
       </div>
     </div>
-    <div class="flex gap-2 mt-5 justify-end">
-      <button class="btn-secondary" onclick="closeModal()">បោះបង់</button>
-      <button class="btn-primary" onclick="saveTask()">💾 រក្សាទុក</button>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">កាលបរិច្ឆេទចាប់ផ្តើម</label>
+        <input type="date" id="f-start"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ថ្ងៃកំណត់</label>
+        <input type="date" id="f-due"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">ស្ថានភាព</label>
+      <select id="f-status" style="max-width:100%;">
+        <option value="pending">⏳ មិនទាន់ធ្វើ</option>
+        <option value="done">✅ បានធ្វើ</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">បោះបង់</button>
+      <button class="btn btn-primary btn-sm" onclick="saveTask()">💾 រក្សាទុក</button>
     </div>
   </div>
 </div>
 
 <script>
-// ===== State =====
-let tasks = JSON.parse(localStorage.getItem('kpi_tasks') || '[]');
-let currentTab = 'all';
-let editingId = null;
+var tasks = JSON.parse(localStorage.getItem('kpi_tasks') || '[]');
+var currentTab = 'all';
+var editingId = null;
 
-// ===== Init =====
 function init() {
-  document.getElementById('today-date').textContent = new Date().toLocaleDateString('km-KH', {year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('today-date').textContent = new Date().toLocaleDateString('km-KH',{year:'numeric',month:'long',day:'numeric'});
+  if (!tasks.length) seedData();
   renderAll();
 }
 
-function save() {
-  localStorage.setItem('kpi_tasks', JSON.stringify(tasks));
+function seedData() {
+  var today = new Date();
+  var d2 = new Date(today); d2.setDate(d2.getDate()+2);
+  tasks = [
+    {id:'1',title:'រៀបចំរបាយការណ៍ប្រចាំខែ',desc:'រៀបចំ និងដាក់ស្នើរបាយការណ៍ KPI ប្រចាំខែ',category:'ការងារសំខាន់',priority:'HIGH',start:'',due:d2.toISOString().split('T')[0],status:'pending',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},
+    {id:'2',title:'ប្រជុំក្រុម',desc:'ប្រជុំប្រចាំសប្តាហ៍ជាមួយក្រុមការងារ',category:'ការប្រជុំ',priority:'MEDIUM',start:'',due:'',status:'done',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},
+    {id:'3',title:'ដំណើរការប្រព័ន្ធ IT',desc:'ត្រូតពិនិត្យ និងថែទាំប្រព័ន្ធ IT',category:'បច្ចេកទេស',priority:'LOW',start:'',due:'',status:'pending',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}
+  ];
+  save();
 }
 
-// ===== Tabs =====
+function save() { localStorage.setItem('kpi_tasks', JSON.stringify(tasks)); }
+
 function setTab(tab) {
   currentTab = tab;
-  ['all','done','pending','stats'].forEach(t => {
-    const el = document.getElementById('tab-'+t);
-    el.classList.remove('tab-active');
-    el.style.color = 'var(--muted-foreground)';
+  ['all','done','pending','stats'].forEach(function(t) {
+    var el = document.getElementById('tab-'+t);
+    el.classList.toggle('active', t === tab);
   });
-  document.getElementById('tab-'+tab).classList.add('tab-active');
-  document.getElementById('tab-'+tab).style.color = '';
-  document.getElementById('stats-panel').classList.add('hidden');
-  document.getElementById('task-list').classList.remove('hidden');
-  document.getElementById('summary-cards').classList.remove('hidden');
-  document.getElementById('progress-section').classList.remove('hidden');
-  document.getElementById('search-filter').classList.remove('hidden');
-  if (tab === 'stats') {
-    document.getElementById('task-list').classList.add('hidden');
-    document.getElementById('summary-cards').classList.add('hidden');
-    document.getElementById('progress-section').classList.add('hidden');
-    document.getElementById('search-filter').classList.add('hidden');
-    document.getElementById('stats-panel').classList.remove('hidden');
-    renderStats();
-  } else {
-    renderTasks();
-  }
+  var isStats = tab === 'stats';
+  ['stats-panel'].forEach(function(id){ document.getElementById(id).classList.toggle('hidden', !isStats); });
+  ['task-list','summary-cards','progress-section','search-filter'].forEach(function(id){ document.getElementById(id).classList.toggle('hidden', isStats); });
+  if (isStats) renderStats(); else renderTasks();
 }
 
-// ===== Modal =====
 function openModal(id) {
   editingId = id || null;
   document.getElementById('modal-title').textContent = id ? 'កែប្រែការងារ' : 'បន្ថែមការងារថ្មី';
   if (id) {
-    const t = tasks.find(x => x.id === id);
+    var t = tasks.find(function(x){return x.id===id;});
     document.getElementById('f-title').value = t.title;
-    document.getElementById('f-desc').value = t.desc || '';
-    document.getElementById('f-category').value = t.category || '';
-    document.getElementById('f-priority').value = t.priority || 'MEDIUM';
-    document.getElementById('f-start').value = t.start || '';
-    document.getElementById('f-due').value = t.due || '';
+    document.getElementById('f-desc').value = t.desc||'';
+    document.getElementById('f-category').value = t.category||'';
+    document.getElementById('f-priority').value = t.priority||'MEDIUM';
+    document.getElementById('f-start').value = t.start||'';
+    document.getElementById('f-due').value = t.due||'';
     document.getElementById('f-status').value = t.status;
   } else {
-    ['f-title','f-desc','f-category','f-start','f-due'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('f-priority').value = 'MEDIUM';
-    document.getElementById('f-status').value = 'pending';
+    ['f-title','f-desc','f-category','f-start','f-due'].forEach(function(i){document.getElementById(i).value='';});
+    document.getElementById('f-priority').value='MEDIUM';
+    document.getElementById('f-status').value='pending';
   }
   document.getElementById('modal').classList.remove('hidden');
 }
-function closeModal() { document.getElementById('modal').classList.add('hidden'); editingId = null; }
-function closeModalBg(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+function closeModal() { document.getElementById('modal').classList.add('hidden'); editingId=null; }
+function closeModalBg(e) { if(e.target===document.getElementById('modal')) closeModal(); }
 
-// ===== CRUD =====
 function saveTask() {
-  const title = document.getElementById('f-title').value.trim();
+  var title = document.getElementById('f-title').value.trim();
   if (!title) { alert('សូមបញ្ចូលឈ្មោះការងារ!'); return; }
+  var data = {
+    title:title,
+    desc:document.getElementById('f-desc').value.trim(),
+    category:document.getElementById('f-category').value.trim(),
+    priority:document.getElementById('f-priority').value,
+    start:document.getElementById('f-start').value,
+    due:document.getElementById('f-due').value,
+    status:document.getElementById('f-status').value,
+    updatedAt:new Date().toISOString()
+  };
   if (editingId) {
-    const idx = tasks.findIndex(x => x.id === editingId);
-    tasks[idx] = { ...tasks[idx],
-      title,
-      desc: document.getElementById('f-desc').value.trim(),
-      category: document.getElementById('f-category').value.trim(),
-      priority: document.getElementById('f-priority').value,
-      start: document.getElementById('f-start').value,
-      due: document.getElementById('f-due').value,
-      status: document.getElementById('f-status').value,
-      updatedAt: new Date().toISOString()
-    };
+    var idx = tasks.findIndex(function(x){return x.id===editingId;});
+    tasks[idx] = Object.assign(tasks[idx], data);
   } else {
-    tasks.unshift({
-      id: Date.now().toString(),
-      title,
-      desc: document.getElementById('f-desc').value.trim(),
-      category: document.getElementById('f-category').value.trim(),
-      priority: document.getElementById('f-priority').value,
-      start: document.getElementById('f-start').value,
-      due: document.getElementById('f-due').value,
-      status: document.getElementById('f-status').value,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
+    data.id = Date.now().toString();
+    data.createdAt = new Date().toISOString();
+    tasks.unshift(data);
   }
-  save();
-  closeModal();
-  renderAll();
+  save(); closeModal(); renderAll();
 }
 
 function toggleStatus(id) {
-  const t = tasks.find(x => x.id === id);
-  t.status = t.status === 'done' ? 'pending' : 'done';
+  var t = tasks.find(function(x){return x.id===id;});
+  t.status = t.status==='done' ? 'pending' : 'done';
   t.updatedAt = new Date().toISOString();
-  save();
-  renderAll();
+  save(); renderAll();
 }
 
 function deleteTask(id) {
   if (!confirm('តើអ្នកចង់លុបការងារនេះមែនទេ?')) return;
-  tasks = tasks.filter(x => x.id !== id);
-  save();
-  renderAll();
+  tasks = tasks.filter(function(x){return x.id!==id;});
+  save(); renderAll();
 }
 
-// ===== Render =====
-function getFilteredTasks() {
-  const q = document.getElementById('search-input').value.toLowerCase();
-  const cat = document.getElementById('filter-category').value;
-  const pri = document.getElementById('filter-priority').value;
-  return tasks.filter(t => {
-    if (currentTab === 'done' && t.status !== 'done') return false;
-    if (currentTab === 'pending' && t.status !== 'pending') return false;
+function isDue(t) {
+  if (!t.due || t.status==='done') return false;
+  return new Date(t.due+'T00:00:00') < new Date();
+}
+
+function fmt(d) {
+  if (!d) return '';
+  return new Date(d+'T00:00:00').toLocaleDateString('km-KH',{year:'numeric',month:'short',day:'numeric'});
+}
+
+function priorityChip(p) {
+  if (p==='HIGH') return '<span class="chip chip-high">🔴 ខ្ពស់</span>';
+  if (p==='LOW') return '<span class="chip chip-low">🟢 ទាប</span>';
+  return '<span class="chip chip-medium">🟡 មធ្យម</span>';
+}
+
+function updateStats() {
+  var done = tasks.filter(function(t){return t.status==='done';}).length;
+  var total = tasks.length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-pending').textContent = total-done;
+  var pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progress-bar').style.width = pct+'%';
+  document.getElementById('progress-pct').textContent = pct+'%';
+}
+
+function updateCatFilter() {
+  var cats = [];
+  tasks.forEach(function(t){ if(t.category && cats.indexOf(t.category)===-1) cats.push(t.category); });
+  var sel = document.getElementById('filter-category');
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">ប្រភេទទាំងអស់</option>';
+  cats.forEach(function(c){ var o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+  sel.value = cur;
+}
+
+function getFiltered() {
+  var q = document.getElementById('search-input').value.toLowerCase();
+  var cat = document.getElementById('filter-category').value;
+  var pri = document.getElementById('filter-priority').value;
+  return tasks.filter(function(t) {
+    if (currentTab==='done' && t.status!=='done') return false;
+    if (currentTab==='pending' && t.status!=='pending') return false;
     if (q && !t.title.toLowerCase().includes(q) && !(t.desc||'').toLowerCase().includes(q)) return false;
-    if (cat && t.category !== cat) return false;
-    if (pri && t.priority !== pri) return false;
+    if (cat && t.category!==cat) return false;
+    if (pri && t.priority!==pri) return false;
     return true;
   });
 }
 
-function updateCategoryFilter() {
-  const cats = [...new Set(tasks.map(t => t.category).filter(Boolean))];
-  const sel = document.getElementById('filter-category');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">ប្រភេទទាំងអស់</option>';
-  cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
-  sel.value = cur;
-}
-
-function updateStats() {
-  const done = tasks.filter(t => t.status === 'done').length;
-  const total = tasks.length;
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-done').textContent = done;
-  document.getElementById('stat-pending').textContent = total - done;
-  const pct = total ? Math.round((done/total)*100) : 0;
-  document.getElementById('progress-bar').style.width = pct + '%';
-  document.getElementById('progress-pct').textContent = pct + '%';
-}
-
-function priorityLabel(p) {
-  if (p === 'HIGH') return '<span class="chip" style="background:var(--error);color:#fff;">🔴 ខ្ពស់</span>';
-  if (p === 'LOW') return '<span class="chip" style="background:var(--success);color:#fff;">🟢 ទាប</span>';
-  return '<span class="chip" style="background:var(--warning);color:#fff;">🟡 មធ្យម</span>';
-}
-
-function formatDate(d) {
-  if (!d) return '';
-  const dt = new Date(d + 'T00:00:00');
-  return dt.toLocaleDateString('km-KH', {year:'numeric',month:'short',day:'numeric'});
-}
-
-function isDue(t) {
-  if (!t.due || t.status === 'done') return false;
-  return new Date(t.due) < new Date();
-}
-
 function renderTasks() {
-  updateCategoryFilter();
-  const list = getFilteredTasks();
-  const container = document.getElementById('task-list');
+  updateCatFilter();
+  var list = getFiltered();
+  var el = document.getElementById('task-list');
   if (!list.length) {
-    container.innerHTML = `<div class="empty-state">
-      <div style="font-size:48px;">📋</div>
-      <div class="mt-2 text-sm">មិនមានការងារ${currentTab==='done'?'ដែលបានធ្វើ':currentTab==='pending'?'ដែលមិនទាន់ធ្វើ':''}នៅឡើយទេ</div>
-      <button class="btn-primary mt-4 text-sm" onclick="openModal()">+ បន្ថែមការងារ</button>
-    </div>`;
+    el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div>មិនមានការងារ'+(currentTab==='done'?'ដែលបានធ្វើ':currentTab==='pending'?'ដែលមិនទាន់ធ្វើ':'')+'នៅឡើយទេ</div><button class="btn btn-primary" style="margin-top:16px;" onclick="openModal()">+ បន្ថែមការងារ</button></div>';
     return;
   }
-  container.innerHTML = list.map(t => `
-    <div class="task-card rounded-xl mb-3 p-4 priority-${t.priority}" style="background:var(--card);border:1px solid var(--card-border);${isDue(t)?'border-color:var(--error);':''}" >
-      <div class="flex items-start gap-3">
-        <div class="flex-shrink-0 mt-1 cursor-pointer" onclick="toggleStatus('${t.id}')">
-          ${t.status === 'done'
-            ? `<div style="width:22px;height:22px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`
-            : `<div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:var(--background);"></div>`}
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex flex-wrap items-center gap-2 mb-1">
-            <span class="font-bold text-sm ${t.status==='done'?'line-through':''}" style="${t.status==='done'?'color:var(--muted-foreground);':''}">${t.title}</span>
-            ${priorityLabel(t.priority)}
-            ${t.category ? `<span class="chip" style="background:var(--secondary);color:var(--secondary-foreground);">${t.category}</span>` : ''}
-            ${isDue(t) ? `<span class="chip" style="background:var(--error);color:#fff;">⚠️ ហួសកំណត!</span>` : ''}
-            <span class="chip ${t.status==='done'?'badge-done':'badge-pending'}">${t.status==='done'?'✅ រួចរាល់':'⏳ កំពុងធ្វើ'}</span>
-          </div>
-          ${t.desc ? `<div class="text-xs mb-1" style="color:var(--muted-foreground);">${t.desc}</div>` : ''}
-          <div class="flex flex-wrap gap-3 text-xs" style="color:var(--muted-foreground);">
-            ${t.start ? `<span>📅 ចាប់ ${formatDate(t.start)}</span>` : ''}
-            ${t.due ? `<span style="${isDue(t)?'color:var(--error);font-weight:700;':''}">🗓️ ថ្ងៃកំណត់ ${formatDate(t.due)}</span>` : ''}
-            <span>🕐 ${new Date(t.createdAt).toLocaleDateString('km-KH')}</span>
-          </div>
-        </div>
-        <div class="flex gap-1 flex-shrink-0">
-          <button class="btn-secondary" onclick="toggleStatus('${t.id}')">${t.status==='done'?'↩️':'✅'}</button>
-          <button class="btn-secondary" onclick="openModal('${t.id}')">✏️</button>
-          <button class="btn-danger" onclick="deleteTask('${t.id}')">🗑️</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
+  el.innerHTML = list.map(function(t) {
+    var due = isDue(t);
+    return '<div class="task-card priority-'+t.priority+(due?' overdue':'')+'">'
+      +'<div class="task-row">'
+      +'<div class="check-circle'+(t.status==='done'?' done':'')+'" onclick="toggleStatus(\''+t.id+'\')">'
+      +(t.status==='done'?'<svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>':'')
+      +'</div>'
+      +'<div class="task-body">'
+      +'<div class="task-title-row">'
+      +'<span class="task-title'+(t.status==='done'?' done-text':'')+'">'+(t.title)+'</span>'
+      +priorityChip(t.priority)
+      +(t.category?'<span class="chip chip-cat">'+t.category+'</span>':'')
+      +(due?'<span class="chip chip-overdue">⚠️ ហួសកំណត!</span>':'')
+      +'<span class="chip '+(t.status==='done'?'chip-done':'chip-pending')+'">'+(t.status==='done'?'✅ រួចរាល់':'⏳ កំពុងធ្វើ')+'</span>'
+      +'</div>'
+      +(t.desc?'<div class="task-desc">'+t.desc+'</div>':'')
+      +'<div class="task-meta">'
+      +(t.start?'<span>📅 ចាប់ '+fmt(t.start)+'</span>':'')
+      +(t.due?'<span style="'+(due?'color:var(--error);font-weight:700;':'')+'">🗓️ ថ្ងៃកំណត់ '+fmt(t.due)+'</span>':'')
+      +'<span>🕐 '+new Date(t.createdAt).toLocaleDateString('km-KH')+'</span>'
+      +'</div>'
+      +'</div>'
+      +'<div class="task-actions">'
+      +'<button class="btn btn-sm '+(t.status==='done'?'btn-outline':'btn-success-sm')+'" onclick="toggleStatus(\''+t.id+'\')">'+(t.status==='done'?'↩️':'✅')+'</button>'
+      +'<button class="btn btn-sm btn-outline" onclick="openModal(\''+t.id+'\')">✏️</button>'
+      +'<button class="btn btn-sm btn-danger-sm" onclick="deleteTask(\''+t.id+'\')">🗑️</button>'
+      +'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
 }
 
 function renderStats() {
-  const total = tasks.length;
-  const done = tasks.filter(t => t.status === 'done').length;
-  const pending = total - done;
-  const pct = total ? Math.round((done/total)*100) : 0;
-  const byPriority = {HIGH: tasks.filter(t=>t.priority==='HIGH').length, MEDIUM: tasks.filter(t=>t.priority==='MEDIUM').length, LOW: tasks.filter(t=>t.priority==='LOW').length};
-  const cats = [...new Set(tasks.map(t=>t.category).filter(Boolean))];
-  const catStats = cats.map(c => ({name:c, count:tasks.filter(t=>t.category===c).length, done:tasks.filter(t=>t.category===c&&t.status==='done').length}));
-  const overdue = tasks.filter(t=>isDue(t)).length;
+  var total = tasks.length;
+  var done = tasks.filter(function(t){return t.status==='done';}).length;
+  var pending = total - done;
+  var pct = total ? Math.round(done/total*100) : 0;
+  var high = tasks.filter(function(t){return t.priority==='HIGH';}).length;
+  var med = tasks.filter(function(t){return t.priority==='MEDIUM';}).length;
+  var low = tasks.filter(function(t){return t.priority==='LOW';}).length;
+  var overdue = tasks.filter(isDue).length;
+  var cats = [];
+  tasks.forEach(function(t){ if(t.category && cats.indexOf(t.category)===-1) cats.push(t.category); });
 
-  document.getElementById('stats-panel').innerHTML = `
-    <div class="grid grid-cols-2 gap-3 mb-4">
-      <div class="rounded-xl p-4" style="background:var(--card);border:1px solid var(--card-border);">
-        <div class="text-xs mb-1" style="color:var(--muted-foreground);">KPI សរុប</div>
-        <div class="text-3xl font-bold">${pct}%</div>
-        <div class="mt-2 rounded-full overflow-hidden" style="height:8px;background:var(--border);">
-          <div class="rounded-full" style="height:100%;width:${pct}%;background:var(--primary);transition:width 0.6s;"></div>
-        </div>
-      </div>
-      <div class="rounded-xl p-4" style="background:var(--card);border:1px solid var(--card-border);">
-        <div class="text-xs mb-2" style="color:var(--muted-foreground);">ការងារហួសកំណត់</div>
-        <div class="text-3xl font-bold" style="color:${overdue>0?'var(--error)':'var(--success)'}">${overdue}</div>
-        <div class="text-xs mt-1" style="color:var(--muted-foreground);">ការងារ</div>
-      </div>
-    </div>
-    <div class="rounded-xl p-4 mb-4" style="background:var(--card);border:1px solid var(--card-border);">
-      <div class="text-sm font-bold mb-3">ស្ថានភាពការងារ</div>
-      <div class="space-y-3">
-        <div>
-          <div class="flex justify-between text-xs mb-1"><span style="color:var(--success);">✅ បានធ្វើ</span><span class="font-bold">${done} / ${total}</span></div>
-          <div class="rounded-full overflow-hidden" style="height:10px;background:var(--border);">
-            <div class="rounded-full" style="height:100%;width:${total?Math.round(done/total*100):0}%;background:var(--success);"></div>
-          </div>
-        </div>
-        <div>
-          <div class="flex justify-between text-xs mb-1"><span style="color:var(--warning);">⏳ មិនទាន់</span><span class="font-bold">${pending} / ${total}</span></div>
-          <div class="rounded-full overflow-hidden" style="height:10px;background:var(--border);">
-            <div class="rounded-full" style="height:100%;width:${total?Math.round(pending/total*100):0}%;background:var(--warning);"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="rounded-xl p-4 mb-4" style="background:var(--card);border:1px solid var(--card-border);">
-      <div class="text-sm font-bold mb-3">អាទិភាពការងារ</div>
-      <div class="grid grid-cols-3 gap-3 text-center">
-        <div class="rounded-lg p-3" style="background:var(--background);border:1px solid var(--border);">
-          <div class="text-xl font-bold" style="color:var(--error);">${byPriority.HIGH}</div>
-          <div class="text-xs mt-1" style="color:var(--muted-foreground);">🔴 ខ្ពស់</div>
-        </div>
-        <div class="rounded-lg p-3" style="background:var(--background);border:1px solid var(--border);">
-          <div class="text-xl font-bold" style="color:var(--warning);">${byPriority.MEDIUM}</div>
-          <div class="text-xs mt-1" style="color:var(--muted-foreground);">🟡 មធ្យម</div>
-        </div>
-        <div class="rounded-lg p-3" style="background:var(--background);border:1px solid var(--border);">
-          <div class="text-xl font-bold" style="color:var(--success);">${byPriority.LOW}</div>
-          <div class="text-xs mt-1" style="color:var(--muted-foreground);">🟢 ទាប</div>
-        </div>
-      </div>
-    </div>
-    ${catStats.length ? `
-    <div class="rounded-xl p-4" style="background:var(--card);border:1px solid var(--card-border);">
-      <div class="text-sm font-bold mb-3">ការងារតាមប្រភេទ</div>
-      <div class="space-y-3">
-        ${catStats.map(c => `
-          <div>
-            <div class="flex justify-between text-xs mb-1">
-              <span>${c.name}</span>
-              <span class="font-bold">${c.done}/${c.count}</span>
-            </div>
-            <div class="rounded-full overflow-hidden" style="height:8px;background:var(--border);">
-              <div class="rounded-full" style="height:100%;width:${c.count?Math.round(c.done/c.count*100):0}%;background:var(--chart-1);"></div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>` : ''}
-    ${!total ? `<div class="empty-state"><div style="font-size:48px">📊</div><div class="mt-2 text-sm">មិនមានទិន្នន័យ KPI នៅឡើយទេ</div><button class="btn-primary mt-4 text-sm" onclick="setTab('all')">+ បន្ថែមការងារ</button></div>` : ''}
-  `;
+  if (!total) {
+    document.getElementById('stats-panel').innerHTML='<div class="empty"><div class="empty-icon">📊</div><div>មិនមានទិន្នន័យ KPI នៅឡើយទេ</div><button class="btn btn-primary" style="margin-top:16px;" onclick="setTab(\'all\')">+ បន្ថែមការងារ</button></div>';
+    return;
+  }
+
+  document.getElementById('stats-panel').innerHTML =
+    '<div class="stats-grid">'
+    +'<div class="stat-big"><div class="stat-big-label">KPI សរុប</div><div class="stat-big-num" style="color:var(--primary);">'+pct+'%</div>'
+    +'<div class="progress-track" style="margin-top:10px;"><div class="bar-fill" style="width:'+pct+'%;background:var(--primary);"></div></div></div>'
+    +'<div class="stat-big"><div class="stat-big-label">ការងារហួសកំណត់</div><div class="stat-big-num" style="color:'+(overdue>0?'var(--error)':'var(--success)')+';">'+overdue+'</div><div style="font-size:11px;color:var(--muted);margin-top:4px;">ការងារ</div></div>'
+    +'</div>'
+
+    +'<div class="section-card"><div class="section-title">ស្ថានភាពការងារ</div>'
+    +'<div class="bar-label"><span style="color:var(--success);">✅ បានធ្វើ</span><span><b>'+done+' / '+total+'</b></span></div>'
+    +'<div class="bar-track"><div class="bar-fill" style="width:'+(total?Math.round(done/total*100):0)+'%;background:var(--success);"></div></div>'
+    +'<div class="bar-label"><span style="color:var(--warning);">⏳ មិនទាន់</span><span><b>'+pending+' / '+total+'</b></span></div>'
+    +'<div class="bar-track"><div class="bar-fill" style="width:'+(total?Math.round(pending/total*100):0)+'%;background:var(--warning);"></div></div>'
+    +'</div>'
+
+    +'<div class="section-card"><div class="section-title">អាទិភាពការងារ</div>'
+    +'<div class="priority-grid">'
+    +'<div class="priority-box"><div class="priority-box-num" style="color:var(--error);">'+high+'</div><div class="priority-box-label">🔴 ខ្ពស់</div></div>'
+    +'<div class="priority-box"><div class="priority-box-num" style="color:var(--warning);">'+med+'</div><div class="priority-box-label">🟡 មធ្យម</div></div>'
+    +'<div class="priority-box"><div class="priority-box-num" style="color:var(--success);">'+low+'</div><div class="priority-box-label">🟢 ទាប</div></div>'
+    +'</div></div>'
+
+    +(cats.length ? '<div class="section-card"><div class="section-title">ការងារតាមប្រភេទ</div>'
+    + cats.map(function(c){
+        var cnt=tasks.filter(function(t){return t.category===c;}).length;
+        var dn=tasks.filter(function(t){return t.category===c&&t.status==='done';}).length;
+        var p=cnt?Math.round(dn/cnt*100):0;
+        return '<div class="bar-label"><span>'+c+'</span><span><b>'+dn+'/'+cnt+'</b></span></div>'
+          +'<div class="bar-track"><div class="bar-fill" style="width:'+p+'%;background:var(--accent);"></div></div>';
+      }).join('')+'</div>' : '');
 }
 
-function renderAll() {
-  updateStats();
-  if (currentTab === 'stats') renderStats();
-  else renderTasks();
-}
-
-// Seed sample data if empty
-if (!tasks.length) {
-  tasks = [
-    { id: '1', title: 'រៀបចំរបាយការណ៍ប្រចាំខែ', desc: 'រៀបចំ និងដាក់ស្នើរបាយការណ៍ KPI ប្រចាំខែ', category: 'ការងារសំខាន់', priority: 'HIGH', start: '', due: new Date(Date.now()+2*86400000).toISOString().split('T')[0], status: 'pending', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-    { id: '2', title: 'ប្រជុំក្រុម', desc: 'ប្រជុំប្រចាំសប្តាហ៍ជាមួយក្រុមការងារ', category: 'ការប្រជុំ', priority: 'MEDIUM', start: '', due: '', status: 'done', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-    { id: '3', title: 'ដំណើរការប្រព័ន្ធ IT', desc: 'ត្រូតពិនិត្យ និងថែទាំប្រព័ន្ធ IT', category: 'បច្ចេកទេស', priority: 'LOW', start: '', due: '', status: 'pending', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  ];
-  save();
-}
+function renderAll() { updateStats(); if(currentTab==='stats') renderStats(); else renderTasks(); }
 
 init();
 </script>
